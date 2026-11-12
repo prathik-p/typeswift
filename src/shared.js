@@ -12,7 +12,7 @@
     blockedSites: [],
     snippets: [
       { id: "s1", prefix: "*", abbr: "addr", text: "221B Baker Street\nLondon NW1 6XE" },
-      { id: "s2", prefix: "*", abbr: "sig", text: "Best regards,\nPrathik" },
+      { id: "s2", prefix: "*", abbr: "sig", text: "Best regards,\nJohn" },
       { id: "s3", prefix: ";", abbr: "date", text: "{date}" },
       { id: "s4", prefix: "*", abbr: "ty", text: "Thanks for reaching out! {cursor}" }
     ]

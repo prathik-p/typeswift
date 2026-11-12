@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "TypeSwift",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Type a prefix plus a short code (like ;addr) and TypeSwift expands it into your saved text in any text box.",
   "browser_specific_settings": {
     "gecko": {

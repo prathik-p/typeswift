@@ -4,7 +4,7 @@
 
 <h1 align="center">TypeSwift</h1>
 
-<p align="center"><strong>Type less, say more.</strong> A text expander for Firefox.</p>
+<p align="center"><strong>A text expander for Firefox.</strong></p>
 
 ---
 
