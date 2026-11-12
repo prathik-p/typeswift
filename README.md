@@ -1,90 +1,47 @@
-# TypeSwift (Firefox)
+<p align="center">
+  <img src="store-assets/icon-128.png" alt="TypeSwift icon" width="96" height="96">
+</p>
 
-Type a prefix plus a shortcut, like `;addr`, in any text box and it is replaced with your saved text.
-Works in normal inputs, textareas and rich-text editors (Gmail, Slack web, Notion, etc.).
+<h1 align="center">TypeSwift</h1>
+
+<p align="center"><strong>Type less, say more.</strong> A text expander for Firefox.</p>
+
+---
+
+TypeSwift turns short codes into the text you type over and over. Save a snippet like your address or email signature, then type a prefix and its shortcut, such as `;addr`, in any text box on any website. TypeSwift instantly replaces it with the full text.
+
+![TypeSwift settings](store-assets/screenshot-1-settings.png)
 
 ## Features
-- **Custom prefixes:** use any number of prefixes (`;`, `//`, `!!`, `::`…). Each snippet can answer to *any* prefix or be pinned to one.
-- **Two expansion modes:** instantly when the shortcut is complete, or only after you type a space/Enter.
-- **Placeholders:** `{date}`, `{isodate}`, `{time}`, `{datetime}`, `{weekday}`, and `{cursor}` to choose where the caret lands.
-- **Per-site off switch** from the toolbar popup, plus a blocklist in settings.
-- Conflict warnings (duplicate shortcuts, or `;ad` blocking `;addr` in instant mode).
-- Import/export to a JSON file. Ctrl+Z undoes an expansion. Password fields are never touched.
-- Everything stays local in your browser (`storage.local`). No network access, no tracking.
 
-## Prerequisites
+- **Your own prefixes.** Use any symbols you like to start a shortcut, such as `;`, `//` or `!!`, and as many as you want. Each snippet can work with all of your prefixes or only one.
+- **Works almost everywhere.** Plain text fields, comment boxes, and rich editors like Gmail, Slack and Notion.
+- **Two ways to expand.** Expand the moment a shortcut is typed, or only after you press Space or Enter.
+- **Placeholders.** Add `{date}`, `{time}`, `{datetime}`, `{weekday}` or `{isodate}` to a snippet to fill in the current value, and `{cursor}` to choose where your cursor lands after the text is inserted.
+- **Per-site control.** Turn TypeSwift off for a site from the toolbar button, or keep a list of sites where it should never run.
+- **Undo friendly.** Press Ctrl+Z right after an expansion to get your shortcut back.
+- **Backup.** Export your snippets to a file and import them on another computer.
+- **Try it in place.** The settings page has a test box, so you can check a snippet before using it.
 
-| What | Needed for | Notes |
-|---|---|---|
-| **Firefox 115 or newer** (desktop) | Running it | 115 ESR works; any current release is fine. Check in *Menu → Help → About Firefox*. |
-| A text editor | Editing snippets defaults or code | Optional; snippets are managed in the settings page. |
-| **Node.js 18+ and npm** | `web-ext` dev tool | Optional for just trying it; needed for live-reload, lint, build and signing. |
-| **web-ext** (`npm install` in this folder) | Run / lint / package / sign | Mozilla's official CLI. Installed as a dev dependency. |
-| **Firefox Add-ons (AMO) account** + API key/secret | Permanent install in normal Firefox | Free. Create keys at https://addons.mozilla.org/developers/addon/api/key/ |
+![Placeholders](store-assets/screenshot-2-placeholders.png)
 
-Why signing matters: regular Firefox (Release/Beta) only keeps **signed** add-ons installed permanently.
-An unsigned add-on can be loaded temporarily (until Firefox restarts), or permanently only in
-**Firefox Developer Edition / Nightly / ESR** with `xpinstall.signatures.required = false` in `about:config`.
+## How it works
 
-## Install options
+1. Open TypeSwift's settings from the toolbar button.
+2. Pick your prefixes, separated by spaces.
+3. Add a snippet: a short name, and the text it should become.
+4. Type a prefix and the short name in any text box, and it expands.
 
-### 1. Try it now (temporary, no tools needed)
-1. Open `about:debugging#/runtime/this-firefox`.
-2. Click **Load Temporary Add-on…** and pick `src/manifest.json`.
-3. Click the toolbar icon. If it says access to websites isn't granted, click **Allow on all websites**
-   (or go to `about:addons` → TypeSwift → Permissions → enable "Access your data for all websites").
-4. Open the settings page from the popup and set up your prefixes and snippets.
+![Expanding a snippet](store-assets/screenshot-3-expanding.png)
 
-It stays loaded until you restart Firefox.
+## Privacy
 
-### 2. Develop with live reload
-```bash
-npm install
-npm start        # opens a fresh Firefox profile with the extension; reloads on file save
-npm run lint     # Mozilla's validator
-```
+TypeSwift collects nothing. Your snippets and settings are stored only in your own Firefox profile and never leave your computer. The extension makes no network requests and never touches password fields.
 
-### 3. Permanent install (recommended) — self-distributed, signed by Mozilla
-"Unlisted" signing gives you a signed `.xpi` for your own use; it isn't published on the store and is usually approved automatically within minutes.
-1. The add-on ID in `src/manifest.json` is `typeswift@prathik-p`. Keep it the same forever: Firefox uses it to recognise updates.
-2. Get an API key and secret from https://addons.mozilla.org/developers/addon/api/key/
-3. Run:
-   ```bash
-   npm install
-   npx web-ext sign --source-dir src --artifacts-dir dist --channel unlisted \
-     --api-key "$AMO_JWT_ISSUER" --api-secret "$AMO_JWT_SECRET"
-   ```
-4. Drag the `.xpi` from `dist/` onto a Firefox window (or *about:addons → ⚙ → Install Add-on From File*).
-5. To update later, bump `"version"` in the manifest and sign again.
+## Requirements
 
-### 4. Unsigned permanent install (Developer Edition / Nightly only)
-Set `xpinstall.signatures.required` to `false` in `about:config`, run `npm run build`,
-rename the zip in `dist/` to `.xpi`, and install it from file.
-
-## Using it
-- Default prefixes are `;` and `//`, so `;addr` and `//addr` both work for snippets set to "any".
-- Sample snippets: `addr`, `sig`, `ty` (with `{cursor}`), and `;date`. Edit or delete them in settings.
-- Single-line inputs flatten line breaks into spaces; that's the browser, not the extension.
-- In instant mode, avoid shortcuts that are the start of another one (the settings page warns you).
-
-## Known limits
-- Firefox doesn't let extensions run on `about:` pages, `addons.mozilla.org`, or the PDF viewer.
-- Google Docs uses a custom canvas editor, so expansion doesn't work inside Docs (Gmail, Sheets cells and most other editors are fine).
-- Storage is per Firefox profile. Use Export/Import to move snippets between computers.
-
-## Files
-```
-src/manifest.json      Manifest V3 definition
-src/shared.js          defaults + helpers (prefix matching, placeholders)
-src/content.js         watches typing and performs the expansion
-src/options/           settings page (prefixes, snippets, blocklist, backup, test area)
-src/popup/             toolbar popup (on/off, per-site off, permission prompt)
-store-assets/          icon and screenshots for the Firefox Add-ons listing
-```
-
-## Changelog
-- **1.1.0** — Renamed to TypeSwift. Settings page has a short intro, highlighted prefix and blocklist instructions, a live list of your prefixes, an expandable placeholder guide, and a "Saved" notice that slides in at the bottom-left after every change.
-- **1.0.0** — First version.
+Firefox 115 or newer on desktop.
 
 ## License
+
 MIT. See [LICENSE](LICENSE).
