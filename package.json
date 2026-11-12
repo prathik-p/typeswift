@@ -1,0 +1,16 @@
+{
+  "name": "typeswift",
+  "version": "1.1.0",
+  "description": "Firefox extension that expands custom-prefix shortcuts into saved text.",
+  "scripts": {
+    "start": "web-ext run --source-dir src",
+    "lint": "web-ext lint --source-dir src",
+    "build": "web-ext build --source-dir src --artifacts-dir dist --overwrite-dest",
+    "sign": "web-ext sign --source-dir src --artifacts-dir dist --channel unlisted"
+  },
+  "devDependencies": {
+    "web-ext": "^8.3.0"
+  },
+  "license": "MIT",
+  "private": true
+}

@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>TypeSwift settings</title>
+  <link rel="stylesheet" href="options.css">
+</head>
+<body>
+  <header>
+    <div class="brand">
+      <img src="../icons/icon.svg" alt="" width="36" height="36">
+      <h1>TypeSwift</h1>
+    </div>
+    <label class="switch"><input type="checkbox" id="enabled"> Enabled</label>
+  </header>
+
+  <section class="intro">
+    <p><strong>Type less, say more.</strong> TypeSwift turns short codes into text you type often. Save a snippet like your address, then type a prefix and its shortcut (for example <code>;addr</code>) in any text box on any website, and TypeSwift swaps it for the full text instantly.</p>
+  </section>
+
+  <section>
+    <h2>Prefixes</h2>
+    <p class="hint">The characters you type before a shortcut. You can have as many as you like.</p>
+    <p class="callout"><strong>Separate each prefix with a space.</strong></p>
+    <input id="prefixes" class="wide mono" placeholder="; // !!">
+    <div class="chips-row"><span class="hint">Your prefixes:</span> <span id="prefixChips"></span></div>
+    <div class="row">
+      <label>Expand
+        <select id="mode">
+          <option value="immediate">as soon as the shortcut is typed</option>
+          <option value="delimiter">after I type a space or Enter</option>
+        </select>
+      </label>
+      <label><input type="checkbox" id="caseSensitive"> Case sensitive</label>
+    </div>
+    <p id="warnings" class="warn" hidden></p>
+  </section>
+
+  <section>
+    <div class="row between">
+      <h2>Snippets</h2>
+      <div class="row">
+        <input id="search" type="search" placeholder="Search snippets">
+        <button id="add" class="primary">+ Add snippet</button>
+      </div>
+    </div>
+    <details class="placeholders">
+      <summary><span class="ph-label">Placeholders:</span> <span class="ph-list"><code>{date}</code> <code>{isodate}</code> <code>{time}</code> <code>{datetime}</code> <code>{weekday}</code> <code>{cursor}</code></span></summary>
+      <p class="hint">Put any of these inside a snippet's text. When the snippet expands, the placeholder is replaced with the value shown (today's values, as an example).</p>
+      <table class="ph-table">
+        <thead><tr><th>Write this</th><th>Becomes</th><th>Right now it would be</th></tr></thead>
+        <tbody>
+          <tr><td><code>{date}</code></td><td>Today's date</td><td id="ph-date"></td></tr>
+          <tr><td><code>{isodate}</code></td><td>Today's date as year-month-day</td><td id="ph-isodate"></td></tr>
+          <tr><td><code>{time}</code></td><td>The current time</td><td id="ph-time"></td></tr>
+          <tr><td><code>{datetime}</code></td><td>Date and time together</td><td id="ph-datetime"></td></tr>
+          <tr><td><code>{weekday}</code></td><td>Today's day name</td><td id="ph-weekday"></td></tr>
+          <tr><td><code>{cursor}</code></td><td>Nothing visible: it marks where your typing cursor lands after the text is inserted</td><td><code>Hi {cursor}, thanks!</code> leaves the cursor right after “Hi ”</td></tr>
+        </tbody>
+      </table>
+    </details>
+    <table id="snippets">
+      <thead><tr><th>Prefix</th><th>Shortcut</th><th>Expands to</th><th></th></tr></thead>
+      <tbody></tbody>
+    </table>
+    <p id="empty" class="hint" hidden>No snippets yet. Click “Add snippet”.</p>
+  </section>
+
+  <section>
+    <h2>Try it</h2>
+    <textarea id="playground" rows="4" class="wide" placeholder="Type a shortcut here, e.g. ;addr"></textarea>
+    <div id="playgroundEditable" contenteditable="true" class="editable" data-placeholder="...or here (a rich-text box)"></div>
+  </section>
+
+  <section>
+    <h2>Turn off on these sites</h2>
+    <p class="hint">TypeSwift won't expand anything on these websites.</p>
+    <p class="callout"><strong>Put one domain on each line.</strong> Just the site name, without <code>https://</code>. Subdomains are included, so <code>example.com</code> also covers <code>mail.example.com</code>.</p>
+    <textarea id="blockedSites" rows="4" class="wide mono" placeholder="docs.google.com"></textarea>
+  </section>
+
+  <section>
+    <h2>Backup</h2>
+    <div class="row">
+      <button id="export">Export to file</button>
+      <button id="importBtn">Import from file</button>
+      <input type="file" id="importFile" accept="application/json,.json" hidden>
+    </div>
+  </section>
+
+  <div id="saved" class="saved-toast" role="status" aria-live="polite">
+    <div class="saved-icon" aria-hidden="true">
+      <svg class="icon-ok" viewBox="0 0 24 24" width="16" height="16"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <svg class="icon-err" viewBox="0 0 24 24" width="16" height="16"><path d="M12 6.5v7M12 17.5v.01" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round"/></svg>
+    </div>
+    <div><strong id="savedTitle">Saved</strong><div id="savedMsg" class="saved-msg">Your changes have been saved.</div></div>
+  </div>
+
+  <template id="rowTpl">
+    <tr>
+      <td><select class="prefix mono"></select></td>
+      <td><input class="abbr mono" placeholder="addr"></td>
+      <td><textarea class="text" rows="2" placeholder="Text to insert"></textarea></td>
+      <td><button class="del" title="Delete snippet" aria-label="Delete snippet"><svg viewBox="0 0 24 24" width="16" height="16"><path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button></td>
+    </tr>
+  </template>
+
+  <script src="../shared.js"></script>
+  <script src="../content.js"></script>
+  <script src="options.js"></script>
+</body>
+</html>

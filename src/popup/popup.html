@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <h1>TypeSwift</h1>
+  <label class="line"><input type="checkbox" id="enabled"> Enabled everywhere</label>
+  <label class="line" id="siteLine"><input type="checkbox" id="siteOff"> Off on <b id="host"></b></label>
+  <p id="summary" class="muted"></p>
+  <div id="perm" hidden>
+    <p class="warn">Firefox hasn't given this extension access to websites yet, so shortcuts won't expand.</p>
+    <button id="grant" class="primary">Allow on all websites</button>
+  </div>
+  <button id="options">Manage prefixes &amp; snippets</button>
+  <div id="toast" class="toast" role="status" aria-live="polite">Saved</div>
+  <script src="../shared.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>
