@@ -5,16 +5,38 @@
   <link rel="stylesheet" href="popup.css">
 </head>
 <body>
-  <h1>TypeSwift</h1>
-  <label class="line"><input type="checkbox" id="enabled"> Enabled everywhere</label>
-  <label class="line" id="siteLine"><input type="checkbox" id="siteOff"> Off on <b id="host"></b></label>
-  <p id="summary" class="muted"></p>
-  <div id="perm" hidden>
-    <p class="warn">Firefox hasn't given this extension access to websites yet, so shortcuts won't expand.</p>
-    <button id="grant" class="primary">Allow on all websites</button>
+  <header class="brand">
+    <img src="../icons/icon.svg" alt="" width="22" height="22">
+    <h1>TypeSwift</h1>
+  </header>
+
+  <div class="list">
+    <label class="row">
+      <span class="text">
+        <span class="label">All websites</span>
+        <span class="hint" id="enabledHint"></span>
+      </span>
+      <input type="checkbox" role="switch" id="enabled">
+      <span class="switch" aria-hidden="true"></span>
+    </label>
+    <label class="row" id="siteRow">
+      <span class="text">
+        <span class="label">This site</span>
+        <span class="hint" id="siteHint"></span>
+      </span>
+      <input type="checkbox" role="switch" id="siteOn">
+      <span class="switch" aria-hidden="true"></span>
+    </label>
   </div>
-  <button id="options">Manage prefixes &amp; snippets</button>
-  <div id="toast" class="toast" role="status" aria-live="polite">Saved</div>
+
+  <div id="perm" class="perm" hidden>
+    <p>Firefox hasn't given TypeSwift access to websites yet, so shortcuts won't expand.</p>
+    <button id="grant" class="primary">Allow access</button>
+  </div>
+
+  <p id="summary" class="summary"></p>
+  <button id="options">Open settings</button>
+
   <script src="../shared.js"></script>
   <script src="popup.js"></script>
 </body>

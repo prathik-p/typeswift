@@ -1,19 +1,6 @@
 (async function () {
   const $ = (id) => document.getElementById(id);
   const s = await PA.loadSettings();
-  const save = (patch) =>
-    PA.saveSettings(patch).then(() => {
-      const t = $("toast");
-      t.classList.add("show");
-      clearTimeout(save.t);
-      save.t = setTimeout(() => t.classList.remove("show"), 1500);
-    });
-
-  $("enabled").checked = s.enabled;
-  $("enabled").addEventListener("change", (e) => save({ enabled: e.target.checked }));
-
-  const count = s.snippets.filter((x) => x.abbr).length;
-  $("summary").textContent = `${count} snippet${count === 1 ? "" : "s"} · prefixes: ${s.prefixes.join("  ") || "none"}`;
 
   let host = "";
   try {
@@ -22,17 +9,42 @@
     if (/^https?:$/.test(url.protocol)) host = url.hostname.toLowerCase();
   } catch (e) { /* no tab access, that's fine */ }
 
-  if (host) {
-    $("host").textContent = host;
-    $("siteOff").checked = PA.hostBlocked(host, s.blockedSites);
-    $("siteOff").addEventListener("change", (e) => {
-      const list = s.blockedSites.filter((d) => !PA.hostBlocked(host, [d]));
-      if (e.target.checked) list.push(host);
-      s.blockedSites = list;
-      save({ blockedSites: list });
-    });
-  } else {
-    $("siteLine").hidden = true;
+  function render() {
+    $("enabled").checked = s.enabled;
+    $("enabledHint").textContent = s.enabled ? "Shortcuts expand as you type" : "Paused everywhere";
+
+    const siteUsable = s.enabled && !!host;
+    $("siteOn").checked = !!host && !PA.hostBlocked(host, s.blockedSites);
+    $("siteOn").disabled = !siteUsable;
+    $("siteRow").classList.toggle("disabled", !siteUsable);
+    $("siteHint").textContent = host || "Not available on this page";
+    $("siteHint").title = host;
+  }
+
+  $("enabled").addEventListener("change", (e) => {
+    s.enabled = e.target.checked;
+    PA.saveSettings({ enabled: s.enabled });
+    render();
+  });
+
+  // "This site" on = not in the blocklist. Turning it on also clears any parent-domain entry that covers this host.
+  $("siteOn").addEventListener("change", (e) => {
+    const list = s.blockedSites.filter((d) => !PA.hostBlocked(host, [d]));
+    if (!e.target.checked) list.push(host);
+    s.blockedSites = list;
+    PA.saveSettings({ blockedSites: list });
+    render();
+  });
+
+  render();
+
+  const count = s.snippets.filter((x) => x.abbr).length;
+  const summary = $("summary");
+  summary.textContent = `${count} snippet${count === 1 ? "" : "s"} · ${s.prefixes.length ? "Prefixes" : "No prefixes set"}`;
+  for (const p of s.prefixes) {
+    const c = document.createElement("code");
+    c.textContent = p;
+    summary.append(c);
   }
 
   const origins = { origins: ["<all_urls>"] };
